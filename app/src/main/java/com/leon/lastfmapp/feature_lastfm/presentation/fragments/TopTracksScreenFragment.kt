@@ -1,6 +1,7 @@
 package com.leon.lastfmapp.feature_lastfm.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,7 +10,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.leon.lastfmapp.R
 import com.leon.lastfmapp.common.util.snackbar
 import com.leon.lastfmapp.databinding.FragmentTopTracksScreenBinding
+import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi
 import com.leon.lastfmapp.feature_lastfm.presentation.viewmodels.TopTracksScreenViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
@@ -18,6 +22,9 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
     private var _binding: FragmentTopTracksScreenBinding? = null
     private val binding: FragmentTopTracksScreenBinding
         get() = _binding!!
+    
+    @Inject
+    lateinit var api: LastFmApi
     
     private val viewModel: TopTracksScreenViewModel by viewModels()
     
@@ -29,6 +36,14 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
         
         subscribeToObservers()
         listenToEvents()
+        
+        // DUMMY CALL
+        lifecycleScope.launch{
+           
+            val obj =  api.getTopTracks()
+            Log.i("FFF", obj.body()?.tracks!!.track[0].name)
+        }
+        
         
         //		binding.btnChangeCity.setOnClickListener {
         //
