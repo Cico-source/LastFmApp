@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#251D42"
+    android:background="@color/background_color"
     tools:context=".feature_lastfm.presentation.fragments.SplashScreenFragment">
 
     <ImageView
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:text="LastFmApp"
         android:textColor="@color/splash_color"
-        android:textSize="60sp"
+        android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
