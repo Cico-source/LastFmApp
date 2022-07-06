@@ -23,9 +23,6 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
     private val binding: FragmentTopTracksScreenBinding
         get() = _binding!!
     
-    @Inject
-    lateinit var api: LastFmApi
-    
     private val viewModel: TopTracksScreenViewModel by viewModels()
     
     
@@ -37,13 +34,7 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
         subscribeToObservers()
         listenToEvents()
         
-        // DUMMY CALL
-        lifecycleScope.launch{
-           
-            val obj =  api.getTopTracks()
-            Log.i("FFF", obj.body()?.tracks!!.track[0].name)
-        }
-        
+        viewModel.getTopTracks()
         
         //		binding.btnChangeCity.setOnClickListener {
         //
@@ -58,14 +49,12 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
             
             when (event)
             {
-                /*
-				is TopTracksScreenViewModel.SetupEvent.GetCityWeatherDetailsErrorEvent ->
+				is TopTracksScreenViewModel.SetupEvent.GetTopTracksErrorEvent ->
 				{
-					binding.loadingSpinner.isVisible = false
-					binding.btnRefresh.isVisible = true
-					snackbar(event.error)
+					// binding.loadingSpinner.isVisible = false
+					// binding.btnRefresh.isVisible = true
+					// snackbar(event.error)
 				}
-				*/
                 else ->
                 {
                     Unit
@@ -82,12 +71,10 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
             
             when (event)
             {
-                /*
-				is TopTracksScreenViewModel.SetupEvent.??? ->
+				is TopTracksScreenViewModel.SetupEvent.GetTopTracksEvent ->
 				{
-				
+                    Log.i("FFF", event.topTracks.tracks.track[0].name)
 				}
-				*/
                 is TopTracksScreenViewModel.SetupEvent.LoadingEvent ->
                 {
                     // binding.loadingSpinner.isVisible = true

@@ -5,6 +5,9 @@ import com.leon.lastfmapp.common.util.DispatcherProvider
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi.Companion.API_KEY
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi.Companion.BASE_URL
+import com.leon.lastfmapp.feature_lastfm.data.repository.LastFmRepositoryImpl
+import com.leon.lastfmapp.feature_lastfm.domain.repository.LastFmRepository
+import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetTopTracks
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -75,6 +78,25 @@ object OpenWeatherModule
             .client(okHttpClient)
             .build()
             .create(LastFmApi::class.java)
+    }
+    
+    @Singleton
+    @Provides
+    fun provideOpenWeatherRepository(
+        // dao: WeatherDetailsDao,
+        openWeatherApi: LastFmApi,
+        @ApplicationContext context: Context
+    ): LastFmRepository = LastFmRepositoryImpl(
+        openWeatherApi,
+        context,
+        // dao,
+    )
+    
+    @Provides
+    @Singleton
+    fun provideGetTopTracksUseCase(repository: LastFmRepository): GetTopTracks
+    {
+        return GetTopTracks(repository)
     }
     
 }
