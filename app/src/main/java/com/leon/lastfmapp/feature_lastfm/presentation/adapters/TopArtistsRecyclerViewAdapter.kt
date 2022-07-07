@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.leon.lastfmapp.databinding.TopTracksItemBinding
-import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.Track
+import com.leon.lastfmapp.databinding.TopArtistsItemBinding
+import com.leon.lastfmapp.feature_lastfm.domain.model.top_artists.Artist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
@@ -14,42 +14,42 @@ import java.text.DecimalFormatSymbols
 import java.util.*
 import javax.inject.Inject
 
-class TopTracksRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter<TopTracksRecyclerViewAdapter.ViewHolder>()
+class TopArtistsRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter<TopArtistsRecyclerViewAdapter.ViewHolder>()
 {
     
-    inner class ViewHolder(val binding: TopTracksItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: TopArtistsItemBinding) : RecyclerView.ViewHolder(binding.root)
     {
         
-        // init
-        // {
-        //     binding.cardLayout.setOnClickListener {
-        //
-        //         onItemClickListener?.let { click ->
-        //
-        //             click(adapterPosition)
-        //         }
-        //     }
-        // }
+        init
+        {
+            binding.cardLayout.setOnClickListener {
+
+                onItemClickListener?.let { click ->
+
+                    click(adapterPosition)
+                }
+            }
+        }
         
     }
     
-    var topTracks = listOf<Track>()
+    var topArtists = listOf<Artist>()
         private set
     
-    // private var onItemClickListener: ((Int) -> Unit)? = null
+    private var onItemClickListener: ((Int) -> Unit)? = null
     
     
-    // fun setOnItemClickListener(listener: (Int) -> Unit)
-    // {
-    //     onItemClickListener = listener
-    // }
+    fun setOnItemClickListener(listener: (Int) -> Unit)
+    {
+        onItemClickListener = listener
+    }
     
-    suspend fun updateDataset(newDataset: List<Track>) = withContext(Dispatchers.Default) {
+    suspend fun updateDataset(newDataset: List<Artist>) = withContext(Dispatchers.Default) {
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback()
         {
             override fun getOldListSize(): Int
             {
-                return topTracks.size
+                return topArtists.size
             }
             
             override fun getNewListSize(): Int
@@ -59,39 +59,38 @@ class TopTracksRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter<
             
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
             {
-                return topTracks[oldItemPosition] == newDataset[newItemPosition]
+                return topArtists[oldItemPosition] == newDataset[newItemPosition]
             }
             
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean
             {
-                return topTracks[oldItemPosition] == newDataset[newItemPosition]
+                return topArtists[oldItemPosition] == newDataset[newItemPosition]
             }
         })
         
         withContext(Dispatchers.Main) {
             
-            topTracks = newDataset
-            diff.dispatchUpdatesTo(this@TopTracksRecyclerViewAdapter)
+            topArtists = newDataset
+            diff.dispatchUpdatesTo(this@TopArtistsRecyclerViewAdapter)
         }
         
     }
     
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopTracksRecyclerViewAdapter.ViewHolder
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopArtistsRecyclerViewAdapter.ViewHolder
     {
-        return ViewHolder(TopTracksItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(TopArtistsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
     
-    override fun onBindViewHolder(holder: TopTracksRecyclerViewAdapter.ViewHolder, position: Int)
+    override fun onBindViewHolder(holder: TopArtistsRecyclerViewAdapter.ViewHolder, position: Int)
     {
         with(holder) {
-            with(topTracks[position]) {
+            with(topArtists[position]) {
                 
                 Glide.with(binding.albumIconImageView.context)
                     .load(this.image[1].text)
                     .into(binding.albumIconImageView)
                 
-                binding.trackNameTextView.text = this.name
-                binding.artistNameTextView.text = this.artist.name
+                binding.artistNameTextView.text = this.name
                 // binding.rainPercent.text = holder.itemView.context.getString(R.string.rain_percent_forecast_value, this.pop * 100, "%")
                 
                 val df2 = DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.getDefault()))
@@ -103,6 +102,6 @@ class TopTracksRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter<
     
     override fun getItemCount(): Int
     {
-        return topTracks.size
+        return topArtists.size
     }
 }

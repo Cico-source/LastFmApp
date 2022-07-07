@@ -4,6 +4,9 @@ package com.leon.lastfmapp.feature_lastfm.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leon.lastfmapp.common.util.DispatcherProvider
+import com.leon.lastfmapp.common.util.Resource
+import com.leon.lastfmapp.feature_lastfm.domain.model.top_artists.TopArtists
+import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetTopArtists
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TopArtistsScreenViewModel @Inject constructor(
     // USE CASES
-    // private val getCityCoordinates: GetCityCoordinates,
-    // private val getWeatherDetails: GetWeatherDetails,
+    private val getTopArtists: GetTopArtists,
     private val dispatchers: DispatcherProvider,
     // CACHING
     // private val dao: WeatherDetailsDao
@@ -26,8 +28,8 @@ class TopArtistsScreenViewModel @Inject constructor(
     sealed class SetupEvent
     {
         
-        // data class GetCityWeatherDetailsEvent(val weatherDetails: WeatherDetails, val city: String) : SetupEvent()
-        data class GetCityWeatherDetailsErrorEvent(val error: String) : SetupEvent()
+        data class GetTopArtistsEvent(val topArtists: TopArtists) : SetupEvent()
+        data class GetTopArtistsErrorEvent(val error: String) : SetupEvent()
         
         object LoadingEvent : SetupEvent()
         object EmptyEvent : SetupEvent()
@@ -39,25 +41,23 @@ class TopArtistsScreenViewModel @Inject constructor(
     private val _screen = MutableStateFlow<SetupEvent>(SetupEvent.EmptyEvent)
     val screen: StateFlow<SetupEvent> = _screen
     
-    fun getWeatherDetailsForCity(city: String)
+    fun getTopArtists()
     {
         _screen.value = SetupEvent.LoadingEvent
         
         viewModelScope.launch(dispatchers.main) {
             
-            /*
-            val cityCoords = getCityCoordinates(city, Constants.CACHE_DURATION_MINUTES)
+            val topArtists = getTopArtists.invoke() // CACHE_DURATION_MINUTES)
             
-            if (cityCoords is Resource.Success)
+            if (topArtists is Resource.Success)
             {
-                _screen.value = SetupEvent.GetCityWeatherDetailsEvent(cityWeatherDetails.data ?: return@launch, city)
+                _screen.value = SetupEvent.GetTopArtistsEvent(topArtists.data ?: return@launch)
             }
             else
             {
                 _screen.emit(SetupEvent.EmptyEvent)
-                _setupEvent.emit(SetupEvent.GetCityWeatherDetailsErrorEvent(cityWeatherDetails.message ?: return@launch))
+                _setupEvent.emit(SetupEvent.GetTopArtistsErrorEvent(topArtists.message ?: return@launch))
             }
-            */
         }
     }
     

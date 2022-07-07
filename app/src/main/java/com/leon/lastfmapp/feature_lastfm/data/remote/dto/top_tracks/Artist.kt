@@ -1,8 +1,8 @@
-package com.leon.lastfmapp.feature_lastfm.data.remote.dto
+package com.leon.lastfmapp.feature_lastfm.data.remote.dto.top_tracks
 
 
 import com.google.gson.annotations.SerializedName
-import com.leon.lastfmapp.feature_lastfm.domain.model.Artist
+import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.Artist
 
 data class Artist(
     @SerializedName("name")

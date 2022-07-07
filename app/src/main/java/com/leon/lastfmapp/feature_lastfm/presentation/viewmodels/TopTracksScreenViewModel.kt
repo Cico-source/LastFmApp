@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leon.lastfmapp.common.util.DispatcherProvider
 import com.leon.lastfmapp.common.util.Resource
-import com.leon.lastfmapp.feature_lastfm.domain.model.TopTracks
+import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.TopTracks
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetTopTracks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

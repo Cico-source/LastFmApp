@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.leon.lastfmapp.R
 import com.leon.lastfmapp.common.util.snackbar
 import com.leon.lastfmapp.databinding.FragmentTopTracksScreenBinding
-import com.leon.lastfmapp.feature_lastfm.domain.model.Track
+import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.Track
 import com.leon.lastfmapp.feature_lastfm.presentation.adapters.TopTracksRecyclerViewAdapter
 import com.leon.lastfmapp.feature_lastfm.presentation.viewmodels.TopTracksScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint

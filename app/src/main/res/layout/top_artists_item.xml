@@ -1,0 +1,100 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:backgroundTint="#FFFFFF"
+    app:cardCornerRadius="40dp"
+    app:contentPadding="20dp"
+    app:strokeColor="#FF485E"
+    app:strokeWidth="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
+
+
+        <TextView
+            android:id="@+id/artistNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:gravity="start"
+            android:maxWidth="150dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/playCountIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Harry Styles" />
+
+        <TextView
+            android:id="@+id/playCountTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playCountIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/playCountIcon"
+            app:layout_constraintTop_toTopOf="@+id/playCountIcon"
+            tools:text="14156054" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/albumIconCardView"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/listenersIcon"
+            app:layout_constraintEnd_toStartOf="@+id/playCountIcon"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/artistNameTextView">
+
+            <ImageView
+                android:id="@+id/albumIconImageView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+
+                />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/listenersCountTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/listenersIcon"
+            app:layout_constraintStart_toStartOf="@+id/playCountTextView"
+            app:layout_constraintTop_toTopOf="@+id/listenersIcon"
+            tools:text="668972" />
+
+        <ImageView
+            android:id="@+id/playCountIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/playCountTextView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/albumIconCardView"
+            app:layout_constraintTop_toBottomOf="@+id/artistNameTextView"
+            app:srcCompat="@drawable/play_count" />
+
+        <ImageView
+            android:id="@+id/listenersIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@+id/playCountIcon"
+            app:layout_constraintTop_toBottomOf="@+id/playCountIcon"
+            app:srcCompat="@drawable/listeners" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,5 +1,6 @@
 package com.leon.lastfmapp.feature_lastfm.data.remote.api
 
+import com.leon.lastfmapp.feature_lastfm.data.remote.responses.TopArtistsResponse
 import com.leon.lastfmapp.feature_lastfm.data.remote.responses.TopTracksResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -13,6 +14,8 @@ interface LastFmApi
     
     ): Response<TopTracksResponse>
     
+    @GET("2.0/?method=chart.gettopartists")
+    suspend fun getTopArtists(): Response<TopArtistsResponse>
     
     companion object
     {
