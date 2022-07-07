@@ -1,17 +1,19 @@
 package com.leon.lastfmapp.feature_lastfm.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import dagger.hilt.android.AndroidEntryPoint
 import com.leon.lastfmapp.R
 import com.leon.lastfmapp.common.util.snackbar
 import com.leon.lastfmapp.databinding.FragmentTopTracksScreenBinding
-import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi
+import com.leon.lastfmapp.feature_lastfm.domain.model.Track
+import com.leon.lastfmapp.feature_lastfm.presentation.adapters.TopTracksRecyclerViewAdapter
 import com.leon.lastfmapp.feature_lastfm.presentation.viewmodels.TopTracksScreenViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,21 +27,50 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
     
     private val viewModel: TopTracksScreenViewModel by viewModels()
     
+    @Inject
+    lateinit var topTracksAdapter: TopTracksRecyclerViewAdapter
+    
+    private var updateTopTracksJob: Job? = null
+    
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTopTracksScreenBinding.bind(view)
         
+        binding.topTracksRecyclerView.adapter = topTracksAdapter
+        
         subscribeToObservers()
         listenToEvents()
         
         viewModel.getTopTracks()
+    
+        binding.btnRefresh.setOnClickListener {
+
+            binding.loadingSpinner.isVisible = true
+            binding.btnRefresh.isVisible = false
+            viewModel.getTopTracks()
+        }
+    
+        // hours48Adapter.setOnItemClickListener { position: Int ->
+        //
+        //     binding.rvList.smoothScrollToPosition(position)
+        // }
         
         //		binding.btnChangeCity.setOnClickListener {
         //
         //			findNavController().navigate(R.id.action_mainScreenFragment_to_searchScreenFragment)
         //		}
+        
+    }
+    
+    private fun updateTopTracksRecyclerView(tracks: List<Track>)
+    {
+        updateTopTracksJob?.cancel()
+        updateTopTracksJob = lifecycleScope.launch {
+            
+            topTracksAdapter.updateDataset(tracks)
+        }
         
     }
     
@@ -51,9 +82,9 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
             {
 				is TopTracksScreenViewModel.SetupEvent.GetTopTracksErrorEvent ->
 				{
-					// binding.loadingSpinner.isVisible = false
-					// binding.btnRefresh.isVisible = true
-					// snackbar(event.error)
+					binding.loadingSpinner.isVisible = false
+					binding.btnRefresh.isVisible = true
+					snackbar(event.error)
 				}
                 else ->
                 {
@@ -73,11 +104,16 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
             {
 				is TopTracksScreenViewModel.SetupEvent.GetTopTracksEvent ->
 				{
-                    Log.i("FFF", event.topTracks.tracks.track[0].name)
+                    event.topTracks.tracks.run {
+                        
+                        updateTopTracksRecyclerView(track)
+                    }
+                    
+                    binding.loadingSpinner.isVisible = false
 				}
                 is TopTracksScreenViewModel.SetupEvent.LoadingEvent ->
                 {
-                    // binding.loadingSpinner.isVisible = true
+                    binding.loadingSpinner.isVisible = true
                 }
                 else                                                ->
                 {
