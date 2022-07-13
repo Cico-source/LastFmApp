@@ -26,7 +26,7 @@ class TopArtistsRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter
 
                 onItemClickListener?.let { click ->
 
-                    click(adapterPosition)
+                    click(topArtists[adapterPosition].name)
                 }
             }
         }
@@ -36,10 +36,10 @@ class TopArtistsRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter
     var topArtists = listOf<Artist>()
         private set
     
-    private var onItemClickListener: ((Int) -> Unit)? = null
+    private var onItemClickListener: ((String) -> Unit)? = null
     
     
-    fun setOnItemClickListener(listener: (Int) -> Unit)
+    fun setOnItemClickListener(listener: (String) -> Unit)
     {
         onItemClickListener = listener
     }

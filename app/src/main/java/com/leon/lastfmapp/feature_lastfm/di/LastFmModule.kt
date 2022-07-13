@@ -7,6 +7,8 @@ import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi.Companion.API
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi.Companion.BASE_URL
 import com.leon.lastfmapp.feature_lastfm.data.repository.LastFmRepositoryImpl
 import com.leon.lastfmapp.feature_lastfm.domain.repository.LastFmRepository
+import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistInfo
+import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistTopTracks
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetTopArtists
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetTopTracks
 import dagger.Module
@@ -57,6 +59,7 @@ object OpenWeatherModule
                 val url = chain.request().url.newBuilder()
                     .addQueryParameter("api_key", API_KEY)
                     .addQueryParameter("format", "json")
+                    .addQueryParameter("limit", "10")
                     .build()
                 val request = chain.request().newBuilder()
                     .url(url)
@@ -105,6 +108,20 @@ object OpenWeatherModule
     fun provideGetTopArtistsUseCase(repository: LastFmRepository): GetTopArtists
     {
         return GetTopArtists(repository)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideGetArtistInfoUseCase(repository: LastFmRepository): GetArtistInfo
+    {
+        return GetArtistInfo(repository)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideGetArtistTopTracksUseCase(repository: LastFmRepository): GetArtistTopTracks
+    {
+        return GetArtistTopTracks(repository)
     }
     
 }

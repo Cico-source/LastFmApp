@@ -1,7 +1,6 @@
 package com.leon.lastfmapp.feature_lastfm.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -54,10 +53,10 @@ class TopArtistsScreenFragment : Fragment(R.layout.fragment_top_artists_screen)
             viewModel.getTopArtists()
         }
     
-        topArtistsAdapter.setOnItemClickListener { position: Int ->
+        topArtistsAdapter.setOnItemClickListener { artistName: String ->
     
             findNavController().navigate(R.id.action_topArtistsScreenFragment_to_artistDetailScreenFragment,
-                // args = Bundle().apply { putString("username", event.username) }
+                args = Bundle().apply { putString("artistName", artistName ) }
                 )
         }
         

@@ -64,5 +64,9 @@
         android:name="com.leon.lastfmapp.feature_lastfm.presentation.fragments.ArtistDetailScreenFragment"
         android:label="ArtistDetailScreenFragment"
         tools:layout="@layout/fragment_artist_detail_screen"
-        />
+        >
+        <argument
+            android:name="artistName"
+            app:argType="string" />
+    </fragment>
 </navigation>

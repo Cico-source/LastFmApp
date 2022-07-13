@@ -4,6 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leon.lastfmapp.common.util.DispatcherProvider
 import com.leon.lastfmapp.common.util.Resource
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.ArtistInfo
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_top_tracks.ArtistTopTracks
+import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistInfo
+import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistTopTracks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ArtistDetailScreenViewModel @Inject constructor(
     // USE CASES
-    // private val getCityCoordinates: GetCityCoordinates,
-    // private val getWeatherDetails: GetWeatherDetails,
+    private val getArtistInfo: GetArtistInfo,
+    private val getArtistTopTracks: GetArtistTopTracks,
     private val dispatchers: DispatcherProvider,
     // CACHING
     // private val dao: WeatherDetailsDao
@@ -26,8 +30,8 @@ class ArtistDetailScreenViewModel @Inject constructor(
     sealed class SetupEvent
     {
         
-        // data class GetCityWeatherDetailsEvent(val weatherDetails: WeatherDetails, val city: String) : SetupEvent()
-        data class GetCityWeatherDetailsErrorEvent(val error: String) : SetupEvent()
+        data class GetArtistDetailEvent(val artistDetail: Pair<ArtistInfo, ArtistTopTracks>) : SetupEvent()
+        data class GetArtistDetailErrorEvent(val error: String) : SetupEvent()
         
         object LoadingEvent : SetupEvent()
         object EmptyEvent : SetupEvent()
@@ -39,25 +43,33 @@ class ArtistDetailScreenViewModel @Inject constructor(
     private val _screen = MutableStateFlow<SetupEvent>(SetupEvent.EmptyEvent)
     val screen: StateFlow<SetupEvent> = _screen
     
-    fun getWeatherDetailsForCity(city: String)
+    fun getArtistDetail(artistName: String)
     {
         _screen.value = SetupEvent.LoadingEvent
         
         viewModelScope.launch(dispatchers.main) {
             
-            /*
-            val cityCoords = getCityCoordinates(city, Constants.CACHE_DURATION_MINUTES)
+            val artistInfo = getArtistInfo(artistName) // Constants.CACHE_DURATION_MINUTES)
             
-            if (cityCoords is Resource.Success)
+            if (artistInfo is Resource.Error)
             {
-                _screen.value = SetupEvent.GetCityWeatherDetailsEvent(cityWeatherDetails.data ?: return@launch, city)
+                _screen.emit(SetupEvent.EmptyEvent)
+                _setupEvent.emit(SetupEvent.GetArtistDetailErrorEvent(artistInfo.message ?: return@launch))
+                return@launch
             }
-            else
+    
+            val artistTopTracks = getArtistTopTracks(artistName)
+            
+            if (artistTopTracks is Resource.Error)
             {
-                _screen.emit(SetupEvent.MainScreenEmptyEvent)
-                _setupEvent.emit(SetupEvent.GetCityWeatherDetailsErrorEvent(cityWeatherDetails.message ?: return@launch))
+                _screen.emit(SetupEvent.EmptyEvent)
+                _setupEvent.emit(SetupEvent.GetArtistDetailErrorEvent(artistInfo.message ?: return@launch))
+                return@launch
             }
-            */
+    
+            _screen.value = SetupEvent.GetArtistDetailEvent(
+                Pair(artistInfo.data ?: return@launch, artistTopTracks.data ?: return@launch)
+            )
             
         }
     }

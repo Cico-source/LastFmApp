@@ -1,19 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".feature_lastfm.presentation.fragments.ArtistDetailScreenFragment">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/wrapperConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#F34E4E"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/artistNameTextView"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/albumIconCardView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/albumIconCardView"
+                app:layout_constraintTop_toTopOf="@+id/albumIconCardView"
+                tools:text="Harry Styles" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/albumIconCardView"
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="30dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/artistNameTextView"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/albumIconImageView"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tag1CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="25dp"
+                app:cardCornerRadius="40dp"
+                app:contentPadding="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/tag2CardView"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/albumIconCardView"
+                app:strokeColor="#FF485E"
+                app:strokeWidth="3dp">
+
+                <TextView
+                    android:id="@+id/tag1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    tools:text="pop" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tag2CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="40dp"
+                app:contentPadding="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/tag3CardView"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tag1CardView"
+                app:layout_constraintTop_toTopOf="@+id/tag1CardView"
+                app:strokeColor="#FF485E"
+                app:strokeWidth="3dp">
+
+                <TextView
+                    android:id="@+id/tag2TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    tools:text="rock" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tag3CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                app:cardCornerRadius="40dp"
+                app:contentPadding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tag2CardView"
+                app:layout_constraintTop_toTopOf="@+id/tag1CardView"
+                app:strokeColor="#FF485E"
+                app:strokeWidth="3dp">
+
+                <TextView
+                    android:id="@+id/tag3TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    tools:text="pop rock" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tag4CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="40dp"
+                app:contentPadding="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/tag2CardView"
+                app:layout_constraintStart_toStartOf="@+id/tag1CardView"
+                app:layout_constraintTop_toBottomOf="@+id/tag1CardView"
+                app:strokeColor="#FF485E"
+                app:strokeWidth="3dp">
+
+                <TextView
+                    android:id="@+id/tag4TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    tools:text="alternative" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tag5CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="40dp"
+                app:contentPadding="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/tag3CardView"
+                app:layout_constraintStart_toEndOf="@+id/tag4CardView"
+                app:layout_constraintTop_toTopOf="@+id/tag4CardView"
+                app:strokeColor="#FF485E"
+                app:strokeWidth="3dp">
+
+                <TextView
+                    android:id="@+id/tag5TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    tools:text="rnb" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/summaryTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:lineSpacingExtra="30sp"
+                android:lineSpacingMultiplier="0"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/artistNameTextView"
+                app:layout_constraintStart_toStartOf="@+id/albumIconCardView"
+                app:layout_constraintTop_toBottomOf="@+id/tag4CardView"
+                tools:text="TextView" />
+
+            <!--<WebView
+        android:id="@+id/summaryTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="@+id/artistNameTextView"
+        app:layout_constraintStart_toStartOf="@+id/albumIconCardView"
+        app:layout_constraintTop_toBottomOf="@+id/artistNameTextView"
+        />-->
+
+            <ImageView
+                android:id="@+id/playCountIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/playCountTextView"
+                app:layout_constraintStart_toStartOf="@+id/summaryTextView"
+                app:layout_constraintTop_toTopOf="@+id/playCountTextView"
+                app:srcCompat="@drawable/colored_play_count" />
+
+            <TextView
+                android:id="@+id/playCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/playCountIcon"
+                app:layout_constraintTop_toBottomOf="@+id/summaryTextView"
+                tools:text="123456788" />
+
+            <TextView
+                android:id="@+id/listenersCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/playCountTextView"
+                app:layout_constraintTop_toBottomOf="@+id/playCountTextView"
+                tools:text="123456788" />
+
+            <ImageView
+                android:id="@+id/listenersIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/listenersCountTextView"
+                app:layout_constraintStart_toStartOf="@+id/playCountIcon"
+                app:layout_constraintTop_toTopOf="@+id/listenersCountTextView"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/colored_listeners" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/topArtistTracksRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/listenersIcon"
+                tools:itemCount="2"
+                tools:listitem="@layout/top_artist_tracks_item" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnRefresh"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="sans-serif-light"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Refresh"
+        android:textColor="#000060"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scrollView2"
+        app:strokeColor="#FF485E"
+        app:strokeWidth="5dp"
+        tools:visibility="visible" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loading"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

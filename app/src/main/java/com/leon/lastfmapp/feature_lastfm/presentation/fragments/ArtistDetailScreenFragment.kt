@@ -2,14 +2,23 @@ package com.leon.lastfmapp.feature_lastfm.presentation.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.leon.lastfmapp.R
 import com.leon.lastfmapp.common.util.snackbar
 import com.leon.lastfmapp.databinding.FragmentArtistDetailScreenBinding
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_top_tracks.Track
+import com.leon.lastfmapp.feature_lastfm.presentation.adapters.TopArtistTracksRecyclerViewAdapter
 import com.leon.lastfmapp.feature_lastfm.presentation.viewmodels.ArtistDetailScreenViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class ArtistDetailScreenFragment : Fragment(R.layout.fragment_artist_detail_screen)
@@ -21,19 +30,42 @@ class ArtistDetailScreenFragment : Fragment(R.layout.fragment_artist_detail_scre
     
     private val viewModel: ArtistDetailScreenViewModel by viewModels()
     
+    private val args: ArtistDetailScreenFragmentArgs by navArgs()
+    
+    @Inject
+    lateinit var topArtistTracksAdapter: TopArtistTracksRecyclerViewAdapter
+    
+    private var updateTopArtistTracksJob: Job? = null
+    
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentArtistDetailScreenBinding.bind(view)
+    
+        binding.topArtistTracksRecyclerView.adapter = topArtistTracksAdapter
         
         subscribeToObservers()
         listenToEvents()
         
-        //		binding.btnChangeCity.setOnClickListener {
-        //
-        //			findNavController().navigate(R.id.action_mainScreenFragment_to_searchScreenFragment)
-        //		}
+        viewModel.getArtistDetail(args.artistName)
+    
+        binding.btnRefresh.setOnClickListener {
+        
+            binding.loadingSpinner.isVisible = true
+            binding.btnRefresh.isVisible = false
+            viewModel.getArtistDetail(args.artistName)
+        }
+        
+    }
+    
+    private fun updateTopArtistsRecyclerView(tracks: List<Track>)
+    {
+        updateTopArtistTracksJob?.cancel()
+        updateTopArtistTracksJob = lifecycleScope.launch {
+            
+            topArtistTracksAdapter.updateDataset(tracks)
+        }
         
     }
     
@@ -43,14 +75,12 @@ class ArtistDetailScreenFragment : Fragment(R.layout.fragment_artist_detail_scre
             
             when (event)
             {
-                /*
-				is ArtistDetailScreenViewModel.SetupEvent.GetCityWeatherDetailsErrorEvent ->
+				is ArtistDetailScreenViewModel.SetupEvent.GetArtistDetailErrorEvent ->
 				{
-					binding.loadingSpinner.isVisible = false
+                    binding.loadingSpinner.isVisible = false
 					binding.btnRefresh.isVisible = true
 					snackbar(event.error)
 				}
-				*/
                 else ->
                 {
                     Unit
@@ -67,15 +97,51 @@ class ArtistDetailScreenFragment : Fragment(R.layout.fragment_artist_detail_scre
             
             when (event)
             {
-                /*
-				is ArtistDetailScreenViewModel.SetupEvent.??? ->
+				is ArtistDetailScreenViewModel.SetupEvent.GetArtistDetailEvent ->
 				{
-				
+				    binding.wrapperConstraintLayout.isVisible = true
+                    
+                    event.artistDetail.first.artist.run {
+                    
+                        Glide.with(binding.albumIconImageView.context)
+                            .load(this.image[1].text)
+                            .into(binding.albumIconImageView)
+                        
+                        binding.artistNameTextView.text = this.name
+                        
+                        binding.tag1TextView.text = this.tags.tag[0].name
+                        binding.tag2TextView.text = this.tags.tag[1].name
+                        binding.tag3TextView.text = this.tags.tag[2].name
+                        binding.tag4TextView.text = this.tags.tag[3].name
+                        binding.tag5TextView.text = this.tags.tag[4].name
+                        
+                        binding.summaryTextView.text = this.bio.summary
+                        
+                        /*
+                        binding.summaryTextView.settings.defaultFontSize = 17
+                        
+                        binding.summaryTextView.loadData(
+                            "<html><head><style> p {line-height: 1.5;}</style></head><body> <p>" + this.bio.summary + "</p></body></html>", "text/html", "utf-8"
+
+                        )
+                        */
+                        
+                        binding.playCountTextView.text = this.stats.playcount
+                        binding.listenersCountTextView.text = this.stats.listeners
+                        
+                    }
+                    
+                    event.artistDetail.second.toptracks.run {
+                        
+                        updateTopArtistsRecyclerView(track)
+                    }
+                    
+                    binding.loadingSpinner.isVisible = false
+                    
 				}
-				*/
                 is ArtistDetailScreenViewModel.SetupEvent.LoadingEvent ->
                 {
-                    // binding.loadingSpinner.isVisible = true
+                    binding.loadingSpinner.isVisible = true
                 }
                 else                                                   ->
                 {

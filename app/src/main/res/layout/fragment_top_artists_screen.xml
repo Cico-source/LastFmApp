@@ -17,22 +17,26 @@
         tools:itemCount="8"
         tools:listitem="@layout/top_artists_item" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/btnRefresh"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#FFFFFF"
+        android:fontFamily="sans-serif-light"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="Refresh"
-        android:textColor="#34515E"
-        android:textSize="20sp"
+        android:textColor="#000060"
+        android:textSize="28sp"
         android:textStyle="bold"
         android:visibility="gone"
-        app:cornerRadius="21dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeWidth="2dp"
+        app:strokeColor="#FF485E"
+        app:strokeWidth="5dp"
         tools:visibility="visible" />
 
     <com.airbnb.lottie.LottieAnimationView
