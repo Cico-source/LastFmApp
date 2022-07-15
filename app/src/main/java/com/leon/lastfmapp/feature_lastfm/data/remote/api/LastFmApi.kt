@@ -1,5 +1,6 @@
 package com.leon.lastfmapp.feature_lastfm.data.remote.api
 
+import com.leon.lastfmapp.feature_lastfm.data.remote.responses.ArtistSearchResponse
 import com.leon.lastfmapp.feature_lastfm.data.remote.responses.ArtistInfoResponse
 import com.leon.lastfmapp.feature_lastfm.data.remote.responses.ArtistTopTracksResponse
 import com.leon.lastfmapp.feature_lastfm.data.remote.responses.TopArtistsResponse
@@ -26,6 +27,11 @@ interface LastFmApi
     suspend fun getArtistTopTracks(
         @Query("artist") artist: String,
     ): Response<ArtistTopTracksResponse>
+    
+    @GET("2.0/?method=artist.search")
+    suspend fun getArtistsBySearch(
+        @Query("artist") artist: String,
+    ): Response<ArtistSearchResponse>
     
     
     companion object

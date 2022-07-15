@@ -6,6 +6,7 @@ import com.leon.lastfmapp.common.util.Resource
 import com.leon.lastfmapp.common.util.checkForInternetConnection
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi
 import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.ArtistInfo
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_search.ArtistSearch
 import com.leon.lastfmapp.feature_lastfm.domain.model.artist_top_tracks.ArtistTopTracks
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_artists.TopArtists
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.TopTracks
@@ -199,6 +200,49 @@ class LastFmRepositoryImpl @Inject constructor(
             // return Resource.Success(body.toWeatherDetails())
         
             return Resource.Success(body.toArtistTopTracks())
+        }
+        else
+        {
+            return Resource.Error(context.getString(R.string.error_unknown))
+        }
+    }
+    
+    override suspend fun getArtistsBySearch(artistName: String): Resource<ArtistSearch>
+    {
+        if (!context.checkForInternetConnection())
+        {
+            return Resource.Error(context.getString(R.string.error_internet_turned_off))
+        }
+    
+        val response = try
+        {
+            lastFmApi.getArtistsBySearch(artistName)
+        }
+        catch (e: HttpException)
+        {
+            return Resource.Error(context.getString(R.string.error_http))
+        }
+        catch (e: IOException)
+        {
+            return Resource.Error(context.getString(R.string.check_internet_connection))
+        }
+    
+        val body = response.body()
+    
+        if (response.isSuccessful && body != null)
+        {
+            // if (caching)
+            // {
+            //     // Remove existing cache
+            //     dao.deleteWeatherDetails()
+            //
+            //     // Update with new cache
+            //     dao.insertWeatherDetails(body.toWeatherDetailsEntity())
+            // }
+        
+            // return Resource.Success(body.toWeatherDetails())
+        
+            return Resource.Success(body.toArtistSearch())
         }
         else
         {

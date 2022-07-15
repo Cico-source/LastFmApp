@@ -1,15 +1,24 @@
 package com.leon.lastfmapp.feature_lastfm.presentation.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.navigation.fragment.findNavController
 import com.leon.lastfmapp.R
 import com.leon.lastfmapp.common.util.snackbar
 import com.leon.lastfmapp.databinding.FragmentSearchScreenBinding
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_search.Artist
+import com.leon.lastfmapp.feature_lastfm.presentation.adapters.SearchedArtistsRecyclerViewAdapter
 import com.leon.lastfmapp.feature_lastfm.presentation.viewmodels.SearchScreenViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
@@ -21,19 +30,63 @@ class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
     
     private val viewModel: SearchScreenViewModel by viewModels()
     
+    @Inject
+    lateinit var searchedArtistsAdapter: SearchedArtistsRecyclerViewAdapter
+    
+    private var updateSearchedArtistsJob: Job? = null
+    
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchScreenBinding.bind(view)
+    
+        binding.topArtistsRecyclerView.adapter = searchedArtistsAdapter
         
         subscribeToObservers()
         listenToEvents()
         
-        //		binding.btnChangeCity.setOnClickListener {
-        //
-        //			findNavController().navigate(R.id.action_mainScreenFragment_to_searchScreenFragment)
-        //		}
+        binding.searchArtistsEditText.addTextChangedListener(object :TextWatcher
+        {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int)
+            {
+            
+            }
+    
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int)
+            {
+            
+            }
+    
+            override fun afterTextChanged(s: Editable?)
+            {
+                viewModel.getArtists(s.toString())
+            }
+        })
+    
+        binding.btnRefresh.setOnClickListener {
+        
+            binding.loadingSpinner.isVisible = true
+            binding.btnRefresh.isVisible = false
+            viewModel.getArtists(binding.searchArtistsEditText.text.toString())
+        }
+    
+        searchedArtistsAdapter.setOnItemClickListener { artistName: String ->
+        
+            findNavController().navigate(R.id.action_searchScreenFragment_to_artistDetailScreenFragment,
+                args = Bundle().apply { putString("artistName", artistName) }
+            )
+        }
+        
+    }
+    
+    private fun updateSearchedArtistsRecyclerView(artists: List<Artist>)
+    {
+        updateSearchedArtistsJob?.cancel()
+        updateSearchedArtistsJob = lifecycleScope.launch {
+            
+            searchedArtistsAdapter.updateDataset(artists)
+        }
         
     }
     
@@ -43,14 +96,12 @@ class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
             
             when (event)
             {
-                /*
-				is SearchScreenViewModel.SetupEvent.GetCityWeatherDetailsErrorEvent ->
+				is SearchScreenViewModel.SetupEvent.GetSearchArtistsErrorEvent ->
 				{
 					binding.loadingSpinner.isVisible = false
 					binding.btnRefresh.isVisible = true
 					snackbar(event.error)
 				}
-				*/
                 else ->
                 {
                     Unit
@@ -67,15 +118,23 @@ class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
             
             when (event)
             {
-                /*
-				is SearchScreenViewModel.SetupEvent.??? ->
+				is SearchScreenViewModel.SetupEvent.GetSearchArtistsEvent ->
 				{
-				
+                    event.searchedArtists.results.run {
+                        
+                        updateSearchedArtistsRecyclerView(artistmatches.artist)
+                    }
+                    
+                    binding.loadingSpinner.isVisible = false
+                    binding.btnRefresh.isVisible = false
 				}
-				*/
                 is SearchScreenViewModel.SetupEvent.LoadingEvent ->
                 {
-                    // binding.loadingSpinner.isVisible = true
+                    binding.loadingSpinner.isVisible = true
+                }
+                is SearchScreenViewModel.SetupEvent.EmptyEvent ->
+                {
+                    binding.loadingSpinner.isVisible = false
                 }
                 else                                             ->
                 {

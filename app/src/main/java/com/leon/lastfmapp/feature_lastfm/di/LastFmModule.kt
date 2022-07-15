@@ -9,6 +9,7 @@ import com.leon.lastfmapp.feature_lastfm.data.repository.LastFmRepositoryImpl
 import com.leon.lastfmapp.feature_lastfm.domain.repository.LastFmRepository
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistInfo
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistTopTracks
+import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistsBySearch
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetTopArtists
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetTopTracks
 import dagger.Module
@@ -122,6 +123,13 @@ object OpenWeatherModule
     fun provideGetArtistTopTracksUseCase(repository: LastFmRepository): GetArtistTopTracks
     {
         return GetArtistTopTracks(repository)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideGetArtistsBySearchUseCase(repository: LastFmRepository): GetArtistsBySearch
+    {
+        return GetArtistsBySearch(repository)
     }
     
 }
