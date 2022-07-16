@@ -91,7 +91,6 @@ class TopArtistsRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter
                     .into(binding.albumIconImageView)
                 
                 binding.artistNameTextView.text = this.name
-                // binding.rainPercent.text = holder.itemView.context.getString(R.string.rain_percent_forecast_value, this.pop * 100, "%")
                 
                 val df2 = DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.getDefault()))
                 binding.playCountTextView.text = df2.format(this.playcount.toInt())

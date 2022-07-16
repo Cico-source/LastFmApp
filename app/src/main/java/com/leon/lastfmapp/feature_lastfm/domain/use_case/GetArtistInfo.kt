@@ -7,9 +7,9 @@ import com.leon.lastfmapp.feature_lastfm.domain.repository.LastFmRepository
 class GetArtistInfo(private val repository: LastFmRepository)
 {
     
-    suspend operator fun invoke(artistName: String): Resource<ArtistInfo>
+    suspend operator fun invoke(artistName: String, cacheDuration: Int): Resource<ArtistInfo>
     {
-        return repository.getArtistInfo(artistName)
+        return repository.getArtistInfo(artistName, cacheDuration)
     }
     
 }

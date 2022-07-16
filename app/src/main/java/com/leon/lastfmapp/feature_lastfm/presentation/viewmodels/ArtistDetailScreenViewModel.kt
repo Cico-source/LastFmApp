@@ -2,6 +2,7 @@ package com.leon.lastfmapp.feature_lastfm.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.leon.lastfmapp.common.util.Constants
 import com.leon.lastfmapp.common.util.DispatcherProvider
 import com.leon.lastfmapp.common.util.Resource
 import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.ArtistInfo
@@ -49,7 +50,7 @@ class ArtistDetailScreenViewModel @Inject constructor(
         
         viewModelScope.launch(dispatchers.main) {
             
-            val artistInfo = getArtistInfo(artistName) // Constants.CACHE_DURATION_MINUTES)
+            val artistInfo = getArtistInfo(artistName, Constants.CACHE_DURATION_MINUTES)
             
             if (artistInfo is Resource.Error)
             {
@@ -58,7 +59,7 @@ class ArtistDetailScreenViewModel @Inject constructor(
                 return@launch
             }
     
-            val artistTopTracks = getArtistTopTracks(artistName)
+            val artistTopTracks = getArtistTopTracks(artistName, Constants.CACHE_DURATION_MINUTES)
             
             if (artistTopTracks is Resource.Error)
             {

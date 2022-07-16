@@ -21,6 +21,7 @@
             android:id="@+id/trackNameTextView"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:gravity="start"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -28,7 +29,7 @@
             app:layout_constraintEnd_toStartOf="@+id/playCountIcon"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/albumIconCardView"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/playCountIcon"
             tools:text="As It Was" />
 
         <TextView
@@ -46,11 +47,13 @@
             android:id="@+id/playCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playCountIcon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/playCountIcon"
-            app:layout_constraintTop_toTopOf="@+id/trackNameTextView"
+            app:layout_constraintTop_toTopOf="@+id/playCountIcon"
             tools:text="14156054" />
 
         <androidx.cardview.widget.CardView
@@ -58,12 +61,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/listenersIcon"
             app:layout_constraintEnd_toStartOf="@+id/trackNameTextView"
             app:layout_constraintHorizontal_bias="0.52"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/trackNameTextView">
+            app:layout_constraintTop_toTopOf="@+id/playCountIcon">
 
             <ImageView
                 android:id="@+id/albumIconImageView"
@@ -78,6 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/listenersIcon"
             app:layout_constraintStart_toStartOf="@+id/playCountTextView"
             app:layout_constraintTop_toTopOf="@+id/listenersIcon"
             tools:text="668972" />
@@ -86,10 +89,11 @@
             android:id="@+id/playCountIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toStartOf="@+id/playCountTextView"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/trackNameTextView"
-            app:layout_constraintTop_toTopOf="@+id/trackNameTextView"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/play_count" />
 
         <ImageView

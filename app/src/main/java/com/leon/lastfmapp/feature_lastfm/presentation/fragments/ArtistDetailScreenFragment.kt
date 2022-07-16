@@ -17,6 +17,9 @@ import com.leon.lastfmapp.feature_lastfm.presentation.viewmodels.ArtistDetailScr
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 import javax.inject.Inject
 
 
@@ -109,11 +112,11 @@ class ArtistDetailScreenFragment : Fragment(R.layout.fragment_artist_detail_scre
                         
                         binding.artistNameTextView.text = this.name
                         
-                        binding.tag1TextView.text = this.tags.tag[0].name
-                        binding.tag2TextView.text = this.tags.tag[1].name
-                        binding.tag3TextView.text = this.tags.tag[2].name
-                        binding.tag4TextView.text = this.tags.tag[3].name
-                        binding.tag5TextView.text = this.tags.tag[4].name
+                        binding.tag1TextView.text = this.tags.tag.getOrNull(0)?.name ?: ""
+                        binding.tag2TextView.text = this.tags.tag.getOrNull(1)?.name ?: ""
+                        binding.tag3TextView.text = this.tags.tag.getOrNull(2)?.name ?: ""
+                        binding.tag4TextView.text = this.tags.tag.getOrNull(3)?.name ?: ""
+                        binding.tag5TextView.text = this.tags.tag.getOrNull(4)?.name ?: ""
                         
                         binding.summaryTextView.text = this.bio.summary
                         
@@ -125,7 +128,7 @@ class ArtistDetailScreenFragment : Fragment(R.layout.fragment_artist_detail_scre
 
                         )
                         */
-                        
+    
                         binding.playCountTextView.text = this.stats.playcount
                         binding.listenersCountTextView.text = this.stats.listeners
                         

@@ -18,31 +18,10 @@ class TopTracksRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter<
 {
     
     inner class ViewHolder(val binding: TopTracksItemBinding) : RecyclerView.ViewHolder(binding.root)
-    {
-        
-        // init
-        // {
-        //     binding.cardLayout.setOnClickListener {
-        //
-        //         onItemClickListener?.let { click ->
-        //
-        //             click(adapterPosition)
-        //         }
-        //     }
-        // }
-        
-    }
     
     var topTracks = listOf<Track>()
         private set
     
-    // private var onItemClickListener: ((Int) -> Unit)? = null
-    
-    
-    // fun setOnItemClickListener(listener: (Int) -> Unit)
-    // {
-    //     onItemClickListener = listener
-    // }
     
     suspend fun updateDataset(newDataset: List<Track>) = withContext(Dispatchers.Default) {
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback()
@@ -92,7 +71,6 @@ class TopTracksRecyclerViewAdapter @Inject constructor() : RecyclerView.Adapter<
                 
                 binding.trackNameTextView.text = this.name
                 binding.artistNameTextView.text = this.artist.name
-                // binding.rainPercent.text = holder.itemView.context.getString(R.string.rain_percent_forecast_value, this.pop * 100, "%")
                 
                 val df2 = DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.getDefault()))
                 binding.playCountTextView.text = df2.format(this.playcount.toInt())

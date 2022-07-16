@@ -4,6 +4,11 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.google.gson.reflect.TypeToken
 import com.leon.lastfmapp.feature_lastfm.data.util.JsonParser
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.Artist
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.Bio
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.Stats
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.Tags
+import com.leon.lastfmapp.feature_lastfm.domain.model.artist_top_tracks.TopTracks
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_artists.Artists
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.Tracks
 
@@ -52,6 +57,54 @@ class Converters(
             {}.type
         ) ?: "{}"
     }
+    
+    @TypeConverter
+    fun fromArtistJson(json: String): Artist
+    {
+        return jsonParser.fromJson<Artist>(
+            json,
+            object : TypeToken<Artist>()
+            {}.type
+        ) ?: Artist(
+            name = "",
+            image = listOf(),
+            stats = Stats("", ""),
+            Tags(listOf()),
+            Bio("", "")
+        )
+    }
+    
+    @TypeConverter
+    fun toArtistJson(current: Artist): String
+    {
+        return jsonParser.toJson(
+            current,
+            object : TypeToken<Artist>()
+            {}.type
+        ) ?: "{}"
+    }
+    
+    @TypeConverter
+    fun fromTopTracksJson(json: String): TopTracks
+    {
+        return jsonParser.fromJson<TopTracks>(
+            json,
+            object : TypeToken<TopTracks>()
+            {}.type
+        ) ?: TopTracks(listOf())
+    }
+    
+    @TypeConverter
+    fun toTopTracksJson(current: TopTracks): String
+    {
+        return jsonParser.toJson(
+            current,
+            object : TypeToken<TopTracks>()
+            {}.type
+        ) ?: "{}"
+    }
+    
+    
     
     // @TypeConverter
     // fun fromMeaningsJson(json: String): List<Meaning>

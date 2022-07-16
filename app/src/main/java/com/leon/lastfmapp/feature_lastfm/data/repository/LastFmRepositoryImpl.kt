@@ -30,7 +30,7 @@ class LastFmRepositoryImpl @Inject constructor(
     
     override suspend fun getTopTracks(cacheDuration: Int): Resource<TopTracks>
     {
-        val topTracksEntity = db.topTracksdao.getTopTracks()
+        val topTracksEntity = db.topTracksDao.getTopTracks()
     
         if (cacheDuration > 0)
         {
@@ -52,7 +52,7 @@ class LastFmRepositoryImpl @Inject constructor(
                 else
                 {
                     // Delete old cache
-                    db.topTracksdao.deleteTopTracks()
+                    db.topTracksDao.deleteTopTracks()
                 }
             }
         
@@ -82,7 +82,7 @@ class LastFmRepositoryImpl @Inject constructor(
         {
             
             // Update with new cache
-            db.topTracksdao.insertTopTracks(body.toTopTracksEntity())
+            db.topTracksDao.insertTopTracks(body.toTopTracksEntity())
             
             return Resource.Success(body.toTopTracks())
         }
@@ -95,7 +95,7 @@ class LastFmRepositoryImpl @Inject constructor(
     
     override suspend fun getTopArtists(cacheDuration: Int): Resource<TopArtists>
     {
-        val topArtistsEntity = db.topArtistsdao.getTopArtists()
+        val topArtistsEntity = db.topArtistsDao.getTopArtists()
     
         if (cacheDuration > 0)
         {
@@ -117,7 +117,7 @@ class LastFmRepositoryImpl @Inject constructor(
                 else
                 {
                     // Delete old cache
-                    db.topTracksdao.deleteTopTracks()
+                    db.topTracksDao.deleteTopTracks()
                 }
             }
         
@@ -146,7 +146,7 @@ class LastFmRepositoryImpl @Inject constructor(
         if (response.isSuccessful && body != null)
         {
             // Update with new cache
-            db.topArtistsdao.insertTopArtists(body.toTopArtistsEntity())
+            db.topArtistsDao.insertTopArtists(body.toTopArtistsEntity())
             
             return Resource.Success(body.toTopArtists())
         }
@@ -157,8 +157,42 @@ class LastFmRepositoryImpl @Inject constructor(
         
     }
     
-    override suspend fun getArtistInfo(artistName: String): Resource<ArtistInfo>
+    override suspend fun getArtistInfo(artistName: String, cacheDuration: Int): Resource<ArtistInfo>
     {
+        val artistInfoEntity = db.artistInfoDao.getArtistInfo(artistName)
+    
+        if (cacheDuration > 0)
+        {
+            artistInfoEntity?.let {
+            
+                val timestamp = Timestamp(it.date)
+                val calBaza = Calendar.getInstance()
+                calBaza.time = timestamp
+            
+                val calTrenutno = Calendar.getInstance()
+                calTrenutno.add(Calendar.MINUTE, -cacheDuration)
+            
+                // If cached data is not older than cacheDuration
+                if (calTrenutno.time.before(calBaza.time))
+                {
+                    // Load cache
+                    return Resource.Success(artistInfoEntity.toArtistInfo().also {
+                        it.artist.bio.summary = it.artist.bio.summary.replace("<a href.*$".toRegex(), "")
+    
+                        val df2 = DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.getDefault()))
+                        it.artist.stats.playcount = df2.format(it.artist.stats.playcount.toInt())
+                        it.artist.stats.listeners = df2.format(it.artist.stats.listeners.toInt())
+                    })
+                }
+                else
+                {
+                    // Delete old cache
+                    db.artistInfoDao.deleteArtistInfo(artistName)
+                }
+            }
+        
+        }
+        
         if (!context.checkForInternetConnection())
         {
             return Resource.Error(context.getString(R.string.error_internet_turned_off))
@@ -181,20 +215,18 @@ class LastFmRepositoryImpl @Inject constructor(
     
         if (response.isSuccessful && body != null)
         {
-            // if (caching)
-            // {
-            //     // Remove existing cache
-            //     dao.deleteWeatherDetails()
-            //
-            //     // Update with new cache
-            //     dao.insertWeatherDetails(body.toWeatherDetailsEntity())
-            // }
-        
-            // return Resource.Success(body.toWeatherDetails())
+            // Update with new cache
+            db.artistInfoDao.insertArtistInfo(body.toArtistInfoEntity())
         
             return Resource.Success(body.toArtistInfo()
                 .also {
                     it.artist.bio.summary = it.artist.bio.summary.replace("<a href.*$".toRegex(), "")
+                    if (it.artist.bio.summary.isBlank())
+                    {
+                        it.artist.bio.summary = "No description."
+                    }
+                    
+                    
                     
                     val df2 = DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.getDefault()))
                     it.artist.stats.playcount = df2.format(it.artist.stats.playcount.toInt())
@@ -207,8 +239,36 @@ class LastFmRepositoryImpl @Inject constructor(
         }
     }
     
-    override suspend fun getArtistTopTracks(artistName: String): Resource<ArtistTopTracks>
+    override suspend fun getArtistTopTracks(artistName: String, cacheDuration: Int): Resource<ArtistTopTracks>
     {
+        val artistTopTracksEntity = db.artistTopTracksDao.getArtistTopTracks(artistName)
+    
+        if (cacheDuration > 0)
+        {
+            artistTopTracksEntity?.let {
+            
+                val timestamp = Timestamp(it.date)
+                val calBaza = Calendar.getInstance()
+                calBaza.time = timestamp
+            
+                val calTrenutno = Calendar.getInstance()
+                calTrenutno.add(Calendar.MINUTE, -cacheDuration)
+            
+                // If cached data is not older than cacheDuration
+                if (calTrenutno.time.before(calBaza.time))
+                {
+                    // Load cache
+                    return Resource.Success(artistTopTracksEntity.toArtistTopTracks())
+                }
+                else
+                {
+                    // Delete old cache
+                    db.artistTopTracksDao.deleteArtistTopTracks(artistName)
+                }
+            }
+        
+        }
+        
         if (!context.checkForInternetConnection())
         {
             return Resource.Error(context.getString(R.string.error_internet_turned_off))
@@ -231,16 +291,8 @@ class LastFmRepositoryImpl @Inject constructor(
     
         if (response.isSuccessful && body != null)
         {
-            // if (caching)
-            // {
-            //     // Remove existing cache
-            //     dao.deleteWeatherDetails()
-            //
-            //     // Update with new cache
-            //     dao.insertWeatherDetails(body.toWeatherDetailsEntity())
-            // }
-        
-            // return Resource.Success(body.toWeatherDetails())
+            // Update with new cache
+            db.artistTopTracksDao.insertArtistTopTracks(body.toArtistTopTracksEntity(artistName))
         
             return Resource.Success(body.toArtistTopTracks())
         }
@@ -274,17 +326,6 @@ class LastFmRepositoryImpl @Inject constructor(
     
         if (response.isSuccessful && body != null)
         {
-            // if (caching)
-            // {
-            //     // Remove existing cache
-            //     dao.deleteWeatherDetails()
-            //
-            //     // Update with new cache
-            //     dao.insertWeatherDetails(body.toWeatherDetailsEntity())
-            // }
-        
-            // return Resource.Success(body.toWeatherDetails())
-        
             return Resource.Success(body.toArtistSearch())
         }
         else

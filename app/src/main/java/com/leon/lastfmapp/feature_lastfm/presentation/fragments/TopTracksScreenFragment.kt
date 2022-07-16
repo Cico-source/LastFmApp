@@ -51,16 +51,6 @@ class TopTracksScreenFragment : Fragment(R.layout.fragment_top_tracks_screen)
             binding.btnRefresh.isVisible = false
             viewModel.getTopTracks()
         }
-    
-        // hours48Adapter.setOnItemClickListener { position: Int ->
-        //
-        //     binding.rvList.smoothScrollToPosition(position)
-        // }
-        
-        //		binding.btnChangeCity.setOnClickListener {
-        //
-        //			findNavController().navigate(R.id.action_mainScreenFragment_to_searchScreenFragment)
-        //		}
         
     }
     
