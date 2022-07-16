@@ -3,6 +3,7 @@ package com.leon.lastfmapp.feature_lastfm.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.leon.lastfmapp.common.util.Constants
 import com.leon.lastfmapp.common.util.DispatcherProvider
 import com.leon.lastfmapp.common.util.Resource
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_artists.TopArtists
@@ -47,7 +48,7 @@ class TopArtistsScreenViewModel @Inject constructor(
         
         viewModelScope.launch(dispatchers.main) {
             
-            val topArtists = getTopArtists.invoke() // CACHE_DURATION_MINUTES)
+            val topArtists = getTopArtists(Constants.CACHE_DURATION_MINUTES)
             
             if (topArtists is Resource.Success)
             {

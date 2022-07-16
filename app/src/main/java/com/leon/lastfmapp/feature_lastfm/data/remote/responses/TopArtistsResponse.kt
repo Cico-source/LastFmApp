@@ -2,6 +2,8 @@ package com.leon.lastfmapp.feature_lastfm.data.remote.responses
 
 
 import com.google.gson.annotations.SerializedName
+import com.leon.lastfmapp.feature_lastfm.data.local.entity.TopArtistsEntity
+import com.leon.lastfmapp.feature_lastfm.data.local.entity.TopTracksEntity
 import com.leon.lastfmapp.feature_lastfm.data.remote.dto.top_artists.Artists
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_artists.TopArtists
 
@@ -14,6 +16,13 @@ data class TopArtistsResponse(
     fun toTopArtists(): TopArtists
     {
         return TopArtists(
+            artists = artists.toArtists()
+        )
+    }
+    
+    fun toTopArtistsEntity(): TopArtistsEntity
+    {
+        return TopArtistsEntity(
             artists = artists.toArtists()
         )
     }

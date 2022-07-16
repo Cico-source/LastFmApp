@@ -4,6 +4,7 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.google.gson.reflect.TypeToken
 import com.leon.lastfmapp.feature_lastfm.data.util.JsonParser
+import com.leon.lastfmapp.feature_lastfm.domain.model.top_artists.Artists
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.Tracks
 
 @ProvidedTypeConverter
@@ -28,6 +29,26 @@ class Converters(
         return jsonParser.toJson(
             current,
             object : TypeToken<Tracks>()
+            {}.type
+        ) ?: "{}"
+    }
+    
+    @TypeConverter
+    fun fromArtistsJson(json: String): Artists
+    {
+        return jsonParser.fromJson<Artists>(
+            json,
+            object : TypeToken<Artists>()
+            {}.type
+        ) ?: Artists(emptyList())
+    }
+    
+    @TypeConverter
+    fun toArtistsJson(current: Artists): String
+    {
+        return jsonParser.toJson(
+            current,
+            object : TypeToken<Artists>()
             {}.type
         ) ?: "{}"
     }

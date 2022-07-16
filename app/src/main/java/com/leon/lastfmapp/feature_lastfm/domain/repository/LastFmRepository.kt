@@ -11,7 +11,7 @@ interface LastFmRepository
 {
     suspend fun getTopTracks(cacheDuration: Int): Resource<TopTracks>
     
-    suspend fun getTopArtists(): Resource<TopArtists>
+    suspend fun getTopArtists(cacheDuration: Int): Resource<TopArtists>
     
     suspend fun getArtistInfo(artistName: String): Resource<ArtistInfo>
     

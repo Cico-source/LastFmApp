@@ -1,4 +1,4 @@
-package com.leon.lastfmapp.feature_lastfm.data.local
+package com.leon.lastfmapp.feature_lastfm.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

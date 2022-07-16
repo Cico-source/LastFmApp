@@ -93,8 +93,36 @@ class LastFmRepositoryImpl @Inject constructor(
         
     }
     
-    override suspend fun getTopArtists(): Resource<TopArtists>
+    override suspend fun getTopArtists(cacheDuration: Int): Resource<TopArtists>
     {
+        val topArtistsEntity = db.topArtistsdao.getTopArtists()
+    
+        if (cacheDuration > 0)
+        {
+            topArtistsEntity?.let {
+            
+                val timestamp = Timestamp(it.date)
+                val calBaza = Calendar.getInstance()
+                calBaza.time = timestamp
+            
+                val calTrenutno = Calendar.getInstance()
+                calTrenutno.add(Calendar.MINUTE, -cacheDuration)
+            
+                // If cached data is not older than cacheDuration
+                if (calTrenutno.time.before(calBaza.time))
+                {
+                    // Load cache
+                    return Resource.Success(topArtistsEntity.toTopArtists())
+                }
+                else
+                {
+                    // Delete old cache
+                    db.topTracksdao.deleteTopTracks()
+                }
+            }
+        
+        }
+        
         if (!context.checkForInternetConnection())
         {
             return Resource.Error(context.getString(R.string.error_internet_turned_off))
@@ -117,16 +145,8 @@ class LastFmRepositoryImpl @Inject constructor(
         
         if (response.isSuccessful && body != null)
         {
-            // if (caching)
-            // {
-            //     // Remove existing cache
-            //     dao.deleteWeatherDetails()
-            //
-            //     // Update with new cache
-            //     dao.insertWeatherDetails(body.toWeatherDetailsEntity())
-            // }
-            
-            // return Resource.Success(body.toWeatherDetails())
+            // Update with new cache
+            db.topArtistsdao.insertTopArtists(body.toTopArtistsEntity())
             
             return Resource.Success(body.toTopArtists())
         }
