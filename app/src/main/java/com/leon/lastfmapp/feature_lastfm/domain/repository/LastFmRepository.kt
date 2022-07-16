@@ -9,7 +9,7 @@ import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.TopTracks
 
 interface LastFmRepository
 {
-    suspend fun getTopTracks(): Resource<TopTracks>
+    suspend fun getTopTracks(cacheDuration: Int): Resource<TopTracks>
     
     suspend fun getTopArtists(): Resource<TopArtists>
     

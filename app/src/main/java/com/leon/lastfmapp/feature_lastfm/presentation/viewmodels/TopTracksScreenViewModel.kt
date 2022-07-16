@@ -2,6 +2,7 @@ package com.leon.lastfmapp.feature_lastfm.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.leon.lastfmapp.common.util.Constants
 import com.leon.lastfmapp.common.util.DispatcherProvider
 import com.leon.lastfmapp.common.util.Resource
 import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.TopTracks
@@ -47,7 +48,7 @@ class TopTracksScreenViewModel @Inject constructor(
         
         viewModelScope.launch(dispatchers.main) {
             
-            val topTracks = getTopTracks.invoke() // Constants.CACHE_DURATION_MINUTES)
+            val topTracks = getTopTracks(Constants.CACHE_DURATION_MINUTES)
             
             if (topTracks is Resource.Success)
             {

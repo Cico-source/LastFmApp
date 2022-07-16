@@ -6,8 +6,8 @@ import com.leon.lastfmapp.feature_lastfm.domain.repository.LastFmRepository
 
 class GetTopTracks(private val repository: LastFmRepository)
 {
-    suspend operator fun invoke(): Resource<TopTracks>
+    suspend operator fun invoke(cacheDuration: Int): Resource<TopTracks>
     {
-        return repository.getTopTracks()
+        return repository.getTopTracks(cacheDuration)
     }
 }

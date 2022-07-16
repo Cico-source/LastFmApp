@@ -4,6 +4,7 @@ import android.content.Context
 import com.leon.lastfmapp.R
 import com.leon.lastfmapp.common.util.Resource
 import com.leon.lastfmapp.common.util.checkForInternetConnection
+import com.leon.lastfmapp.feature_lastfm.data.local.LastFmDatabase
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi
 import com.leon.lastfmapp.feature_lastfm.domain.model.artist_info.ArtistInfo
 import com.leon.lastfmapp.feature_lastfm.domain.model.artist_search.ArtistSearch
@@ -13,6 +14,7 @@ import com.leon.lastfmapp.feature_lastfm.domain.model.top_tracks.TopTracks
 import com.leon.lastfmapp.feature_lastfm.domain.repository.LastFmRepository
 import retrofit2.HttpException
 import java.io.IOException
+import java.sql.Timestamp
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -21,13 +23,41 @@ import javax.inject.Inject
 class LastFmRepositoryImpl @Inject constructor(
     private val lastFmApi: LastFmApi,
     private val context: Context,
-    // private val dao: WeatherDetailsDao
+    private val db: LastFmDatabase
 
 ) : LastFmRepository
 {
     
-    override suspend fun getTopTracks(): Resource<TopTracks>
+    override suspend fun getTopTracks(cacheDuration: Int): Resource<TopTracks>
     {
+        val topTracksEntity = db.topTracksdao.getTopTracks()
+    
+        if (cacheDuration > 0)
+        {
+            topTracksEntity?.let {
+            
+                val timestamp = Timestamp(it.date)
+                val calBaza = Calendar.getInstance()
+                calBaza.time = timestamp
+            
+                val calTrenutno = Calendar.getInstance()
+                calTrenutno.add(Calendar.MINUTE, -cacheDuration)
+            
+                // If cached data is not older than cacheDuration
+                if (calTrenutno.time.before(calBaza.time))
+                {
+                    // Load cache
+                    return Resource.Success(topTracksEntity.toTopTracks())
+                }
+                else
+                {
+                    // Delete old cache
+                    db.topTracksdao.deleteTopTracks()
+                }
+            }
+        
+        }
+        
         if (!context.checkForInternetConnection())
         {
             return Resource.Error(context.getString(R.string.error_internet_turned_off))
@@ -50,16 +80,9 @@ class LastFmRepositoryImpl @Inject constructor(
         
         if (response.isSuccessful && body != null)
         {
-            // if (caching)
-            // {
-            //     // Remove existing cache
-            //     dao.deleteWeatherDetails()
-            //
-            //     // Update with new cache
-            //     dao.insertWeatherDetails(body.toWeatherDetailsEntity())
-            // }
             
-            // return Resource.Success(body.toWeatherDetails())
+            // Update with new cache
+            db.topTracksdao.insertTopTracks(body.toTopTracksEntity())
             
             return Resource.Success(body.toTopTracks())
         }

@@ -1,11 +1,17 @@
 package com.leon.lastfmapp.feature_lastfm.di
 
-import  android.content.Context
+import android.app.Application
+import android.content.Context
+import androidx.room.Room
+import com.google.gson.Gson
 import com.leon.lastfmapp.common.util.DispatcherProvider
+import com.leon.lastfmapp.feature_lastfm.data.local.Converters
+import com.leon.lastfmapp.feature_lastfm.data.local.LastFmDatabase
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi.Companion.API_KEY
 import com.leon.lastfmapp.feature_lastfm.data.remote.api.LastFmApi.Companion.BASE_URL
 import com.leon.lastfmapp.feature_lastfm.data.repository.LastFmRepositoryImpl
+import com.leon.lastfmapp.feature_lastfm.data.util.GsonParser
 import com.leon.lastfmapp.feature_lastfm.domain.repository.LastFmRepository
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistInfo
 import com.leon.lastfmapp.feature_lastfm.domain.use_case.GetArtistTopTracks
@@ -85,16 +91,28 @@ object OpenWeatherModule
             .create(LastFmApi::class.java)
     }
     
+    @Provides
+    @Singleton
+    fun provideTopTracksDatabase(app: Application): LastFmDatabase
+    {
+        return Room.databaseBuilder(
+            app, LastFmDatabase::class.java, "lastfm_db"
+        )
+            .addTypeConverter(Converters(GsonParser(Gson())))
+            .build()
+    }
+    
+    
     @Singleton
     @Provides
     fun provideLastFmRepository(
-        // dao: WeatherDetailsDao,
+        db: LastFmDatabase,
         openWeatherApi: LastFmApi,
         @ApplicationContext context: Context
     ): LastFmRepository = LastFmRepositoryImpl(
         openWeatherApi,
         context,
-        // dao,
+        db
     )
     
     @Provides
