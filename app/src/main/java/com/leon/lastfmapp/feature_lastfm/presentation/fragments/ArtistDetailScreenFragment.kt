@@ -2,10 +2,12 @@ package com.leon.lastfmapp.feature_lastfm.presentation.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.leon.lastfmapp.R
@@ -40,6 +42,28 @@ class ArtistDetailScreenFragment : Fragment(R.layout.fragment_artist_detail_scre
     
     private var updateTopArtistTracksJob: Job? = null
     
+    
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true)
+        {
+            override fun handleOnBackPressed()
+            {
+    
+                if (args.screen == "SearchScreen")
+                {
+                    findNavController().navigate(R.id.action_artistDetailScreenFragment_to_searchScreenFragment,
+                        args = Bundle().apply { putString("backPressed", args.artistName) }
+                    )
+                }
+                else if (args.screen == "TopArtistsScreen")
+                {
+                    findNavController().navigate(R.id.action_artistDetailScreenFragment_to_topArtistsScreenFragment)
+                }
+            }
+        })
+    }
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {

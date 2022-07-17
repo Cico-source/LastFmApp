@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.leon.lastfmapp.R
 import com.leon.lastfmapp.common.util.snackbar
 import com.leon.lastfmapp.databinding.FragmentSearchScreenBinding
@@ -29,6 +31,8 @@ class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
         get() = _binding!!
     
     private val viewModel: SearchScreenViewModel by viewModels()
+    
+    private val args: SearchScreenFragmentArgs by navArgs()
     
     @Inject
     lateinit var searchedArtistsAdapter: SearchedArtistsRecyclerViewAdapter
@@ -64,6 +68,11 @@ class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
             }
         })
     
+        if (args.backPressed != null)
+        {
+            binding.searchArtistsEditText.setText(args.backPressed)
+        }
+    
         binding.btnRefresh.setOnClickListener {
         
             binding.loadingSpinner.isVisible = true
@@ -74,7 +83,10 @@ class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
         searchedArtistsAdapter.setOnItemClickListener { artistName: String ->
         
             findNavController().navigate(R.id.action_searchScreenFragment_to_artistDetailScreenFragment,
-                args = Bundle().apply { putString("artistName", artistName) }
+                args = Bundle().apply {
+                    putString("artistName", artistName)
+                    putString("screen", "SearchScreen")
+                }
             )
         }
         
@@ -145,6 +157,7 @@ class SearchScreenFragment : Fragment(R.layout.fragment_search_screen)
         }
         
     }
+    
     
     override fun onDestroy()
     {

@@ -56,7 +56,10 @@ class TopArtistsScreenFragment : Fragment(R.layout.fragment_top_artists_screen)
         topArtistsAdapter.setOnItemClickListener { artistName: String ->
     
             findNavController().navigate(R.id.action_topArtistsScreenFragment_to_artistDetailScreenFragment,
-                args = Bundle().apply { putString("artistName", artistName ) }
+                args = Bundle().apply {
+                    putString("artistName", artistName )
+                    putString("screen", "TopArtistsScreen")
+                }
                 )
         }
         

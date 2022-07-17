@@ -35,7 +35,8 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen)
 		
 		binding.btnSearchArtists.setOnClickListener {
 
-			findNavController().navigate(R.id.action_mainScreenFragment_to_searchScreenFragment)
+			findNavController().navigate(R.id.action_mainScreenFragment_to_searchScreenFragment,
+				args = Bundle().apply { putString("backPressed", null)})
 		}
 	
 	}

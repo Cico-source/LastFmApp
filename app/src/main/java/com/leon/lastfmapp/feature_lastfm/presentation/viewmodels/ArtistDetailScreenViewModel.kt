@@ -64,7 +64,7 @@ class ArtistDetailScreenViewModel @Inject constructor(
             if (artistTopTracks is Resource.Error)
             {
                 _screen.emit(SetupEvent.EmptyEvent)
-                _setupEvent.emit(SetupEvent.GetArtistDetailErrorEvent(artistInfo.message ?: return@launch))
+                _setupEvent.emit(SetupEvent.GetArtistDetailErrorEvent(artistTopTracks.message ?: return@launch))
                 return@launch
             }
     
